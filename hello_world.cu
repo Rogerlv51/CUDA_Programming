@@ -2,6 +2,7 @@
 *hello_world.cu   使用nvcc hello_world.cu编译
 */
 #include<stdio.h>
+#include <unistd.h>
 
 // __global__是告诉编译器这个是个可以在设备上执行的核函数
 __global__ void hello_world(void)
@@ -11,7 +12,10 @@ __global__ void hello_world(void)
 int main(int argc, char **argv)
 {
   printf("CPU: Hello world!\n");
+  sleep(1);
   hello_world<<<1,10>>>();    // 会打印10次
+  fflush(stdout);
+  printf("cpu: hello\n");  // 可以看到只要核函数运行了，CPU会立马接管主机线程
   cudaDeviceReset();//if no this line ,it can not output hello world from gpu
   /*
     GPU和CPU执行程序是异步的，核函数调用后立刻回到主机线程继续，而不管GPU端核函数是否执行完毕，
