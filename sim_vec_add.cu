@@ -3,6 +3,8 @@
 #include "freshman.h"
 
 // 这是一个简单的两个向量相加的cuda程序
+
+// cpu加法
 void sumArrays(float * a,float * b,float * res,const int size)
 {
   for(int i=0;i<size;i+=4)
@@ -13,6 +15,8 @@ void sumArrays(float * a,float * b,float * res,const int size)
     res[i+3]=a[i+3]+b[i+3];
   }
 }
+
+// GPU加法
 __global__ void sumArraysGPU(float*a,float*b,float*res)
 {
   int i=threadIdx.x;
