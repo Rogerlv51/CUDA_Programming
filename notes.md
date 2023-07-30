@@ -77,3 +77,23 @@ GPU的内存分层结构：
     获得每个函数执行后的返回结果，然后对不成功的信息加以处理，CUDA C 的API每个调用都会返回一个错误代码，这个代码我们就可以好好利用了，当然在release版本中可以去除这部分，但是开发的时候一定要有的
     */
     ```
+
+## **给核函数计时**
+
+- 用CPU计时：详情见sum_array_timer文件
+
+    - 使用gettimeofday函数是linux下自带的一个库函数，创建cpu计时
+        ```c++
+        #include <sys/time.h>
+        double cpuSecond()
+        {
+        struct timeval tp;
+        gettimeofday(&tp,NULL);
+        return((double)tp.tv_sec+(double)tp.tv_usec*1e-6);
+        }
+        ```
+
+    大致测试时间流程如下图：
+    ![timer](imgs/timer.png)
+
+- 更准确的方式应当使用nvprof计时，cuda5.0之后支持，用法为`nvprof [nvprof_args] <application>[application_args]`
