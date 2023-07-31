@@ -97,3 +97,20 @@ GPU的内存分层结构：
     ![timer](imgs/timer.png)
 
 - 更准确的方式应当使用nvprof计时，cuda5.0之后支持，用法为`nvprof [nvprof_args] <application>[application_args]`
+
+
+## **CUDA模型中的线程组织模式：Thread,Block,Grid**
+
+- 使用块和线程建立矩阵索引，一个基本的线程模型如下图：
+
+    ![thread](imgs/thread_model.png)
+    这里(ix,iy)就是整个线程模型中任意一个线程的索引，或者叫做全局地址，局部地址当然就是(threadIdx.x,threadIdx.y)了，不同线程块中有相同的局部索引值
+
+    我们要做管理的就是：
+    - 线程和块索引（来计算线程的全局索引）
+    - 矩阵中给定点的坐标（ix,iy）
+    - (ix,iy)对应的线性内存的位置
+
+    <font color='red'>**线程的坐标(ix,iy)对应矩阵中(ix,iy)的元素，这样就形成了一一对应，不同的线程处理矩阵中不同的数据，举个具体的例子，ix=10,iy=10的线程去处理矩阵中(10,10)的数据**</font>
+
+    具体实验代码见：`thread_idx.cu`和`sum_matrix.cu`
